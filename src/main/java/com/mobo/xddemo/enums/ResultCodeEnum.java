@@ -1,5 +1,10 @@
 package com.mobo.xddemo.enums;
 
+/**
+ * @author mobo
+ * @DESC 返回code码
+ */
+
 public enum ResultCodeEnum {
     /**
      * 操作成功
@@ -14,6 +19,8 @@ public enum ResultCodeEnum {
     private String value;
 
     ResultCodeEnum(int code, String value) {
+        this.code = code;
+        this.value = value;
     }
 
     public Integer getCode() {
