@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -19,7 +20,10 @@ import javax.servlet.http.HttpServletRequest;
 public class XdExceptionHandler {
 
     @ExceptionHandler(value = Exception.class)
-    JsonData handlerException(Exception e, HttpServletRequest request) {
-        return JsonData.buildError("服务器出问题了", -2);
+    Object handlerException(Exception e, HttpServletRequest request) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("error.html");
+        modelAndView.addObject("msg", e.getMessage());
+        return modelAndView;
     }
 }
