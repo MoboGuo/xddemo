@@ -13,7 +13,7 @@ import java.util.HashMap;
  * @create 2020-11-06-17:14
  */
 @Data
-public class JsonData<T> implements Serializable {
+public class JsonData implements Serializable {
 
     /**
      * 状态码 0失败  1成功
@@ -23,7 +23,7 @@ public class JsonData<T> implements Serializable {
     /**
      * 返回数据
      */
-    private T data;
+    private Object data;
 
     /**
      * 描述信息
@@ -31,74 +31,67 @@ public class JsonData<T> implements Serializable {
     private String msg;
 
     public JsonData() {
-        this.code = ResultCodeEnum.RESULT_SUCCESS.getCode();
-        this.data = (T)new HashMap();
     }
 
-    public JsonData(Integer code, T data, String msg) {
+    public JsonData(Integer code, Object data, String msg) {
         this.code = code;
         this.data = data;
         this.msg = msg;
     }
 
     /**
-     * 自定义返回值  用以临时协议的code
-     * @param code
-     * @param msg
-     * @param <T>
+     * 成功，传入数据
      * @return
      */
-    public static <T>JsonData customizeResult(Integer code, String msg){
-        return new JsonData().setCode(code).setMsg(msg);
-    }
-
-    public static <T>JsonData customizeResult(Integer code, T data, String msg){
-        return new JsonData().setCode(code).setData(data).setMsg(msg);
+    public static JsonData buildSuccess() {
+        return new JsonData(ResultCodeEnum.RESULT_SUCCESS.getCode(), null, null);
     }
 
     /**
-     * 返回请求成功的json
-     * @param msg
-     * @param <T>
+     * 成功，传入数据
+     * @param data 数据
      * @return
      */
-    public static <T>JsonData successResult(String msg){
-        return (new JsonData()).setCode(ResultCodeEnum.RESULT_SUCCESS.getCode()).setMsg(msg);
-    }
-
-    public static <T>JsonData successResult(T data, String msg){
-        return new JsonData().setCode(ResultCodeEnum.RESULT_SUCCESS.getCode()).setData(data).setMsg(msg);
+    public static JsonData buildSuccess(Object data) {
+        return new JsonData(ResultCodeEnum.RESULT_SUCCESS.getCode(), data, null);
     }
 
     /**
-     * 返回请求失败的json
-     * @param msg
-     * @param <T>
+     * 失败，传入描述信息
+     * @param msg 通知信息
      * @return
      */
-    public static <T>JsonData failedResult(String msg){
-        return new JsonData().setCode(ResultCodeEnum.RESULT_FAILURE.getCode()).setMsg(msg);
+    public static JsonData buildError(String msg) {
+        return new JsonData(ResultCodeEnum.RESULT_FAILURE.getCode(), null, msg);
     }
 
-    public static <T>JsonData failedResult(T data, String msg){
-        return new JsonData().setCode(ResultCodeEnum.RESULT_FAILURE.getCode()).setData(data).setMsg(msg);
+    /**
+     * 失败，传入描述信息,状态码
+     * @param msg 通知信息
+     * @param code 码值
+     * @return
+     */
+    public static JsonData buildError(String msg, Integer code) {
+        return new JsonData(code, null, msg);
     }
 
-    public JsonData<T> setData(T data) {
-        if (data != null) {
-            this.data = data;
-        }
-        return this;
+    /**
+     * 成功，传入数据,及描述信息
+     * @param data 数据
+     * @param msg 通知信息
+     * @return
+     */
+    public static JsonData buildSuccess(Object data, String msg) {
+        return new JsonData(ResultCodeEnum.RESULT_SUCCESS.getCode(), data, msg);
     }
 
-    public JsonData<T> setCode(final Integer code) {
-        this.code = code;
-        return this;
+    /**
+     * 成功，传入数据,及状态码
+     * @param data 数据
+     * @param code 返回信息
+     * @return
+     */
+    public static JsonData buildSuccess(Object data, int code) {
+        return new JsonData(code, data, null);
     }
-
-    public JsonData<T> setMsg(final String msg) {
-        this.msg = msg;
-        return this;
-    }
-
 }
