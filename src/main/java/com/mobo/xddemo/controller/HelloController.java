@@ -1,10 +1,7 @@
 package com.mobo.xddemo.controller;
 
 import com.mobo.xddemo.domain.JsonData;
-import com.mobo.xddemo.domain.XdException;
-import com.submail.config.AppConfig;
-import com.submail.lib.MESSAGEXsend;
-import com.submail.utils.ConfigLoader;
+import com.mobo.xddemo.domain.MessageXSend;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
@@ -23,15 +21,10 @@ import java.security.NoSuchAlgorithmException;
  */
 @RestController
 @RequestMapping("v1/test")
-@PropertySource({"classpath:xddemo.properties"})
 public class HelloController {
 
-    @Value("${message.submail.appid}")
-    private String appId;
-    @Value("${message.submail.appkey}")
-    private String appKey;
-    @Value("${message.submail.signType}")
-    private String signType;
+    @Resource
+    private MessageXSend messageXSend;
 
     @GetMapping("/hello")
     public JsonData helloTest(){
@@ -46,17 +39,12 @@ public class HelloController {
 
     @PostMapping("/message")
     public JsonData testSendMessage(){
-        AppConfig appConfig = ConfigLoader.createConfig(appId, appKey, signType);
-        MESSAGEXsend submail = new MESSAGEXsend(appConfig);
-        submail.addTo("13623801642");
-        submail.setProject("YGZuD");
-//        submail.addVar("code", "张三");
+        messageXSend.addTo("13623801642");
+        messageXSend.setProject("YGZuD");
         String response= null;
         try {
-            response = submail.xsend();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+            response = messageXSend.xsend();
+        } catch (Exception e) {
             e.printStackTrace();
         }
         System.out.println("接口返回数据：" + response);
