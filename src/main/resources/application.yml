@@ -3,3 +3,14 @@ server:
 spring:
   resources:
     static-locations: classpath:/templates/
+
+
+
+#submail相关配置信息
+message:
+  submail:
+    appid: 57157
+    signType: md5
+    appkey: 05800549d11ee6baf9bbc8accfca9a4d
+    send: http://api.submail.cn/message/send.json
+    xsend: http://api.submail.cn/message/xsend.json
