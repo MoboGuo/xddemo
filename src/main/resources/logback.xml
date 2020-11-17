@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 
+debug : 默认为false ，设置为true时，将打印出logback内部日志信息，实时查看logback运行状态。
+scan : 配置文件如果发生改变，将会重新加载，默认值为true；
+scanPeriod : 检测配置文件是否有修改的时间间隔，如果没有给出时间单位，默认单位时毫秒，当scan为true时，这个属性生效，默认时间间隔为1min。
+ -->
+<configuration debug="false" scan="true" scanPeriod="1000 seconds">
+	<timestamp key="date" datePattern="yyyyMMdd" />
+	<!-- 彩色日志依赖的渲染类 -->
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />
+    <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter" />
+    <conversionRule conversionWord="ewt" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter" />
+    <!-- 彩色日志格式 -->
+    <property name="CONSOLE_LOG_PATTERN" value="${CONSOLE_LOG_PATTERN:-%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %clr(%m) %n${LOG_EXCEPTION_CONVERSION_WORD:-%ewt}}" />
+    <!-- Console 输出设置 -->
+    <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            <charset>utf8</charset>
+        </encoder>
+    </appender>
+	<!-- Output to File -->
+	<appender name="file_log" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>/var/tmp/logs/catalina.log</File>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+              <!-- 过滤掉非INFO级别 -->
+              <level>INFO</level>
+              <onMatch>ACCEPT</onMatch>
+              <onMismatch>DENY</onMismatch>
+        </filter>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>
+				/var/tmp/logs/catalina.%d{yyyy-MM-dd}.log
+			</FileNamePattern>
+			<!-- keep 1 days worth of history -->
+			<MaxHistory>30</MaxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss} %level %c:%L - %msg%n</pattern>
+			<charset>UTF-8</charset>
+		</encoder>
+	</appender>
+	<appender name="error_log" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>/var/tmp/logs/error.log</File>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+              <!-- 过滤掉非ERROR级别 -->
+              <level>ERROR</level>
+              <onMatch>ACCEPT</onMatch>
+              <onMismatch>DENY</onMismatch>
+        </filter>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>
+				/var/tmp/logs/error.%d{yyyy-MM-dd}.log
+			</FileNamePattern>
+			<!-- keep 1 days worth of history -->
+			<MaxHistory>30</MaxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss} %level %c:%L - %msg%n</pattern>
+			<charset>UTF-8</charset>
+		</encoder>
+	</appender>
+	<appender name="timethreshold_log" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>/var/tmp/logs/timethreshold.log</File>
+	    <filter class="ch.qos.logback.classic.filter.LevelFilter">
+              <!-- 过滤掉非WARN级别 -->
+              <level>WARN</level>
+              <onMatch>ACCEPT</onMatch>
+              <onMismatch>DENY</onMismatch>
+        </filter>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>
+				/var/tmp/logs/threshold.%d{yyyy-MM-dd}.log
+			</FileNamePattern>
+			<!-- keep 1 days worth of history -->
+			<MaxHistory>30</MaxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss} %level %c:%L - %msg%n</pattern>
+			<charset>UTF-8</charset>
+		</encoder>
+	</appender>
+	<!-- 打印级别，大小写无关：TRACE, DEBUG, INFO, WARN, ERROR, ALL 和  OFF 默认是DEBUG -->
+	<root level="INFO">
+		<appender-ref ref="Console" />
+		<appender-ref ref="file_log" />
+		<appender-ref ref="error_log" />
+	</root>
+	<logger name="org.springframework" level="ERROR" />
+	<logger name="com.xb.mapper" level="ERROR" />
+	<logger name="com.xb.mybatis.plug.SlowSqlItcpt" level="WARN" >
+	       <appender-ref ref="timethreshold_log" />
+	</logger>
+</configuration>

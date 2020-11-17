@@ -56,6 +56,10 @@ public class JsonData implements Serializable {
         return new JsonData(ResultCodeEnum.RESULT_SUCCESS.getCode(), data, null);
     }
 
+    public static JsonData buildSuccess(String msg) {
+        return new JsonData(ResultCodeEnum.RESULT_SUCCESS.getCode(), null, msg);
+    }
+
     /**
      * 失败，传入描述信息
      * @param msg 通知信息
