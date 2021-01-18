@@ -30,7 +30,7 @@ import java.util.Map;
  * @create 2020-11-12-15:34
  */
 @Configuration
-@PropertySource({"classpath:application.yml"})
+@PropertySource({"classpath:xddemo.properties"})
 public class MessageUtil {
 
     @Value("${message.submail.send}")
