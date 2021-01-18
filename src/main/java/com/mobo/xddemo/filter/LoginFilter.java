@@ -7,6 +7,7 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 /**
  * 登录判断过滤器
@@ -45,6 +46,22 @@ public class LoginFilter implements Filter {
         } else {
             // TODO 判断token是否合法
             filterChain.doFilter(request, response);
+        }
+    }
+
+    /**
+     * 输出返回值
+     * @param response
+     * @param json
+     */
+    private void renderJson(HttpServletResponse response, String json) {
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json");
+
+        try(PrintWriter writer = response.getWriter()) {
+            writer.println(json);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
