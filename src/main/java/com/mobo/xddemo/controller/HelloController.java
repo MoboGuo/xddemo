@@ -28,7 +28,7 @@ public class HelloController {
 
     @GetMapping("/hello")
     public JsonData helloTest(){
-        return JsonData.buildSuccess(null, "hello, world! 测试一下自动部署1");
+        return JsonData.buildSuccess(null, "hello, world! 测试一下自动部署12");
     }
 
     @GetMapping("/exception")
